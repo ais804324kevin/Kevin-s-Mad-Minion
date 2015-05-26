@@ -1,0 +1,115 @@
+<html>
+<title> Lab 12 </title>
+
+<!-- copy and paste the next 2 lines to setup the sound files, you must modify the loadsoundchrome.js file with your sounds -->
+<script type="text/javascript" src="script/soundmanager2.js"></script>
+<script type="text/javascript" src="script/loadsoundchrome.js"></script>
+<!-- Stop copying here -->
+
+<center>
+	<script type="text/javascript" src="script/processing-1.4.1.js"></script>
+	<script type="text/processing" data-processing-target="mycanvas">
+
+	/* @pjs globalKeyEvents ="true"; */
+	
+	int onRed;
+	int onYellow;
+	int onGreen;
+
+void setup()
+	{
+		size(300, 200);
+		onRed = 0;
+		onYellow = 0;
+		onGreen = 0;
+	}
+
+
+void draw()
+	{
+		background(0,0,0);
+		
+		    fill(122,0,0);
+			ellipse(150,50,25,25);
+			
+			fill(135,135,0);
+			ellipse(150,100,25,25);
+			
+			fill(60,90,0);
+			ellipse(150,150,25,25);
+		
+            if (onRed == 1)
+		{
+			fill(255,0,0);
+			ellipse(150,50,25,25);
+			
+		}
+		
+		    if (onYellow == 1)
+		{
+			fill(255,255,0);
+			ellipse(150,100,25,25);
+		}
+		
+		    if (onGreen == 1)
+		{
+			fill(125,255,0);
+			ellipse(150,150,25,25);
+		}
+		
+		if (mousePressed == true && mouseButton == LEFT)
+
+        {
+
+        if (mouseX > 137.5 && mouseX < 162.5 && mouseY > 37.5 && mouseY < 62.5)
+        {
+            onRed = 1;
+        }
+        
+        if (mouseX > 137.5 && mouseX < 162.5 && mouseY > 87.5 && mouseY < 112.5)
+        {
+            onYellow = 1;
+        }
+        
+        if (mouseX > 137.5 && mouseX < 162.5 && mouseY > 137.5 && mouseY < 162.5)
+        {
+            onGreen = 1;
+        }
+        
+		}
+	}
+
+void keyPressed()
+	{
+		if (key == '1')
+		{
+			
+			onRed = 1;
+			soundManager.play('s0');
+		}
+		if (key == '2')
+		{
+			soundManager.play('s1');
+			onYellow = 1;
+		}
+		if (key == '3')
+		{
+			soundManager.play('s2');
+            onGreen = 1;
+		}
+		if (key == '4')
+		{
+			onRed = 0;
+            onGreen = 0;
+            onYellow = 0;
+		}
+	}
+	
+
+
+	</script>
+	<canvas id="mycanvas"></canvas>
+</center>
+</html>
+
+

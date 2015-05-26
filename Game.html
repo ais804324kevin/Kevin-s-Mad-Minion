@@ -1,0 +1,1061 @@
+<html>
+<!-- copy and paste the next 2 lines to setup the sound files, you must modify the loadsoundchrome.js file with your sounds -->
+<script type="text/javascript" src="script/soundmanager2.js"></script>
+<script type="text/javascript" src="script/loadsoundchrome.js"></script>
+<!-- Stop copying here -->
+<head>
+<center>
+<title> Mad Minions</title>
+<script src="processing-1.4.1.js"></script>
+<script type="text/processing" data-processing-target="mycanvas">
+/* @pjs globalKeyEvents = "true"; */
+
+//minion control
+
+int minionX;
+int minionY;
+
+// bean positions X
+
+int blackBeanX;
+int brownBeanX;
+int greenBeanX;
+int orangeBeanX;
+int pinkBeanX;
+int purpleBeanX;
+int heartX;
+/*
+int gold5X;
+*/
+
+// bean positions Y
+
+int blackBeanY;
+int brownBeanY;
+int greenBeanY;
+int orangeBeanY;
+int pinkBeanY;
+int purpleBeanY;
+int heartY;
+/*
+int gold5Y;
+*/
+
+// distance between beans and minion head
+
+int dBlackHead;
+int dBrownHead;
+int dGreenHead;
+int dOrangeHead;
+int dPinkHead;
+int dPurpleHead;
+int dHeartHead;
+/*
+int dGoldHead5;
+*/
+
+// distance between beans and minion bottom
+
+int dBlackButt;
+int dBrownButt;
+int dGreenButt;
+int dOrangeButt;
+int dPinkButt;
+int dPurpleButt;
+int dHeartButt;
+/*
+int dGoldButt5;
+*/
+
+// minion lives
+
+int lives;
+
+
+// heart variables of beans
+int heartsBlack;
+int heartsBrown;
+int heartsGreen;
+int heartsOrange;
+int heartsPink;
+int heartsPurple;
+int heartsHeart;
+/*
+int goldsHeart5;
+*/
+
+// pop sounds;
+int blackPop;
+int brownPop;
+int greenPop;
+int orangePop;
+int pinkPop;
+int purplePop;
+int heartPop;
+/*
+int goldPop5;
+*/
+
+// music
+int music;
+
+// end setup and scores
+int score;
+int scoreStop;
+int end;
+void setup()
+	{
+		size(800, 600);
+		frameRate( 30 );
+		gamebackground = loadImage("gamebackground.jpg");
+		character = loadImage("character.png");
+		minionLeft = loadImage("minionLeft.png");
+		minionLeftHit = loadImage("minionLeftHit.png");
+		minionRight = loadImage("minionRight.png");
+		minionRightHit = loadImage("minionLeftHit.png");
+		minionIdle = loadImage("minionIdle.png");
+		minionIdleHit = loadImage("minionIdleHit.png");
+		blackBean = loadImage("blackbean.png");
+		brownBean = loadImage("brownbean.png");
+		greenBean = loadImage("greenbean.png");
+		orangeBean = loadImage("orangebean.png");
+		pinkBean = loadImage("pinkbean.png");
+		purpleBean = loadImage("purplebean.png");
+		madMinion = loadImage("madMinion.png");
+		redheart = loadImage("redheart.png");
+		gameover = loadImage("gameover.png");
+		/*
+		goldCoin5 = loadImage("goldCoin5.png");
+		*/
+		
+		//start position
+		minionX = 250;
+		minionY = 450; 
+		
+		// random x positions of beans 
+		
+		blackBeanX = random(10,250);
+		brownBeanX = random(250,500);
+		greenBeanX = random(10,500);
+		orangeBeanX = random(250,500);
+		pinkBeanX = random(10,250);
+		purpleBeanX = random(250,500);
+		heartX = random (10,500);
+		/*
+		gold5X = random (10,500);
+		*/
+		
+		// random y positions of beans
+		
+		blackBeanY = random(-400,-800);
+		brownBeanY = random(-50,-400);
+		greenBeanY = random(-50,-800);
+		orangeBeanY = random(-50,-400);
+		pinkBeanY = random(-50,-800);
+		purpleBeanY = random(-50,-400);
+		heartY = random (-1000,-5000);
+		/*
+		gold5Y = random (-1000,-5000);
+		*/
+		
+		// distance between beans and minion
+		dBlackHead = 0;
+		dBrownHead = 0;
+		dGreenHead = 0;
+		dOrangeHead = 0;
+		dPinkHead = 0;
+		dPurpleHead = 0;
+		dHeartHead = 0;
+		/*
+		dGoldHead5 = 0;
+		*/
+	    
+	    // minion lives
+	    lives = 3;
+	    hearts = 1;
+	    
+	    //pop sounds
+	    blackPop = 0;
+	    brownPop = 0;
+	    greenPop = 0;
+	    orangePop = 0;
+	    pinkPop = 0;
+	    purplePop = 0;
+	    heartPop = 0;
+	    /*
+	    goldPop5 = 0;
+	    */
+	    
+	    //music
+	    music = 1;
+	    
+	    //end point and score
+	    scoreStop = 0;
+	    score = 0;
+	    end = 0;
+	    
+	
+	}
+
+void draw()
+	{
+	    // show background and minion
+	    
+	    image(gamebackground,0,0,800,600);
+	    
+	    //image(character,minionX,minionY,80,150);
+
+
+	    // background music
+	    if (lives < 4)
+	    	{
+			if (music == 1)
+				{
+				soundManager.play('s1');
+				music = 0
+				}
+	    }
+	    
+	    // show 3 lives (heart)
+	    
+	    if (lives == 3)
+			{ 
+				image(redheart,615,100,48,48);
+				image(redheart,665,100,48,48);
+				image(redheart,715,100,48,48);
+			}
+	    
+	    if (lives > 3)
+	    	{
+	    		lives = 3;
+	    	}	
+	    	    
+	    // control minion by arrow keys
+	    if (minionX > 0 && minionX < 500)
+			{ 
+		
+				if (keyPressed == true)
+					{
+						if (keyCode == LEFT)
+							{
+							  minionX = minionX - 10;
+							  image(minionLeft,minionX,minionY,80,150);
+							}
+						if (keyCode == RIGHT)
+							{
+							  minionX = minionX + 10;
+							  image(minionRight,minionX-10,minionY,80,150);
+							}
+						if (keyCode == UP)
+							{
+								image(minionIdle,minionX,minionY,80,150);
+							}
+						if (keyCode == DOWN)
+							{
+								image(minionIdle,minionX,minionY,80,150);
+							}
+					}
+				else
+					{
+						image(minionIdle,minionX,minionY,80,150);
+					}
+		
+			}
+			
+	    // preventing minion from going infinitely left or infinitely right
+	    
+	    if (minionX == 0)
+			{    
+				if (keyPressed == true)
+					{
+						if (keyCode == LEFT)
+							{
+							  minionX = minionX + 10;
+							}
+					}
+			}
+		
+		if (minionX == 500)
+			{    
+			if (keyPressed == true)
+				{
+				if (keyCode == RIGHT)
+					{
+					  minionX = minionX - 10;
+					}
+				}
+			}
+		
+		// show beans
+		
+		image(blackBean,blackBeanX,blackBeanY,50,50);
+		image(brownBean,brownBeanX,brownBeanY,50,50);
+		image(greenBean,greenBeanX,greenBeanY,50,50);
+		image(orangeBean,orangeBeanX,orangeBeanY,50,50);
+		image(pinkBean,pinkBeanX,pinkBeanY,50,50);
+		image(purpleBean,purpleBeanX,purpleBeanY,50,50);
+		image(redheart,heartX,heartY,50,50);
+		/*
+		image(goldCoin5, gold5X, gold5Y,50,50);
+		*/
+		
+        // beans moving down (default)
+        blackBeanY = blackBeanY + 10
+		brownBeanY = brownBeanY + 8
+		greenBeanY = greenBeanY + 6
+		orangeBeanY = orangeBeanY + 6
+		pinkBeanY = pinkBeanY + 10
+		purpleBeanY = purpleBeanY + 8
+		heartY = heartY + 6
+		/*
+		gold5Y = gold5Y + 6
+		*/
+		
+		//CHANGES
+		
+        //if bean of certain color < 600, then score + 1.
+        if (score <= 50)
+        	{	
+				if (blackBeanY > 599 && blackBeanY < 609)
+					{
+						score = score + 1;
+					}
+				if (brownBeanY > 599 && brownBeanY < 607)
+					{
+						score = score + 1;
+					}
+				if (greenBeanY > 599 && greenBeanY < 605)
+					{
+						score = score + 1;
+					}
+				if (orangeBeanY > 599 && orangeBeanY < 605)
+					{
+						score = score + 1;
+					}
+				if (pinkBeanY > 599 && pinkBeanY < 609)
+					{
+						score = score + 1;
+					}
+				if (purpleBeanY > 599 && purpleBeanY < 607)
+					{
+						score = score + 1;
+					}
+				/*
+				if (heartY > 599 && heartY < 605)
+					{
+						if (lives < 3)
+							{
+								lives = lives + 1;
+							}
+					}
+				*/
+        	}
+        
+        if (score >= 51 && score <= 100)
+			{
+				blackBeanY = blackBeanY + 2
+				brownBeanY = brownBeanY + 2
+				greenBeanY = greenBeanY + 2
+				orangeBeanY = orangeBeanY + 2
+				pinkBeanY = pinkBeanY + 2
+				purpleBeanY = purpleBeanY + 2
+				heartY = heartY + 2
+				/*
+				gold5Y = gold5Y + 2
+				*/
+				
+					if (blackBeanY > 599 && blackBeanY < 611)
+						{
+							score = score + 1;
+						}
+					if (brownBeanY > 599 && brownBeanY < 609)
+						{
+							score = score + 1;
+						}
+					if (greenBeanY > 599 && greenBeanY < 607)
+						{
+							score = score + 1;
+						}
+					if (orangeBeanY > 599 && orangeBeanY < 607)
+						{
+							score = score + 1;
+						}
+					if (pinkBeanY > 599 && pinkBeanY < 611)
+						{
+							score = score + 1;
+						}
+					if (purpleBeanY > 599 && purpleBeanY < 609)
+						{
+							score = score + 1;
+						}	
+					/*
+					if (heartY > 599 && heartY < 607)
+						{
+							if (lives < 3)
+								{
+									lives = lives + 1;
+								}
+						}
+					*/
+				
+			}
+        
+        if (score >= 101 && score <= 150)
+			{
+				blackBeanY = blackBeanY + 2
+				brownBeanY = brownBeanY + 2
+				greenBeanY = greenBeanY + 2
+				orangeBeanY = orangeBeanY + 2
+				pinkBeanY = pinkBeanY + 2
+				purpleBeanY = purpleBeanY + 2
+				heartY = heartY + 2
+				/*
+				gold5Y = gold5Y + 2
+				*/
+				
+					if (blackBeanY > 599 && blackBeanY < 613)
+						{
+							score = score + 1;
+						}
+					if (brownBeanY > 599 && brownBeanY < 611)
+						{
+							score = score + 1;
+						}
+					if (greenBeanY > 599 && greenBeanY < 609)
+						{
+							score = score + 1;
+						}
+					if (orangeBeanY > 599 && orangeBeanY < 609)
+						{
+							score = score + 1;
+						}
+					if (pinkBeanY > 599 && pinkBeanY < 613)
+						{
+							score = score + 1;
+						}
+					if (purpleBeanY > 599 && purpleBeanY < 611)
+						{
+						score = score + 1;
+						}	
+					/*
+					if (heartY > 599 && heartY < 609)
+						{
+							if (lives < 3)
+								{
+									lives = lives + 1;
+								}
+						}
+					*/
+				
+			}
+        
+        if (score >= 151 && score <= 200)
+        	{
+        blackBeanY = blackBeanY + 2
+        brownBeanY = brownBeanY + 2
+        greenBeanY = greenBeanY + 2
+        orangeBeanY = orangeBeanY + 2
+        pinkBeanY = pinkBeanY + 2
+        purpleBeanY = purpleBeanY + 2
+        heartY = heartY + 2
+        /*
+        gold5Y = gold5Y + 2
+        */
+        
+        		if (blackBeanY > 599 && blackBeanY < 615)
+					{
+						score = score + 1;
+					}
+				if (brownBeanY > 599 && brownBeanY < 613)
+					{
+						score = score + 1;
+					}
+				if (greenBeanY > 599 && greenBeanY < 611)
+					{
+						score = score + 1;
+					}
+				if (orangeBeanY > 599 && orangeBeanY < 611)
+					{
+						score = score + 1;
+					}
+				if (pinkBeanY > 599 && pinkBeanY < 615)
+					{
+						score = score + 1;
+					}
+				if (purpleBeanY > 599 && purpleBeanY < 613)
+					{
+					score = score + 1;
+					}	
+				/*
+				if (heartY > 599 && heartY < 611)
+						{
+							if (lives < 3)
+								{
+									lives = lives + 1;
+								}
+						}
+				*/
+        }
+        
+        if (score >= 201 && score <= 250)
+        	{
+        blackBeanY = blackBeanY + 2
+        brownBeanY = brownBeanY + 2
+        greenBeanY = greenBeanY + 2
+        orangeBeanY = orangeBeanY + 2
+        pinkBeanY = pinkBeanY + 2
+        purpleBeanY = purpleBeanY + 2
+        heartY = heartY + 2
+        /*
+        gold5Y = gold5Y + 2
+        */
+        
+                if (blackBeanY > 599 && blackBeanY < 617)
+					{
+						score = score + 1;
+					}
+				if (brownBeanY > 599 && brownBeanY < 615)
+					{
+						score = score + 1;
+					}
+				if (greenBeanY > 599 && greenBeanY < 613)
+					{
+						score = score + 1;
+					}
+				if (orangeBeanY > 599 && orangeBeanY < 613)
+					{
+						score = score + 1;
+					}
+				if (pinkBeanY > 599 && pinkBeanY < 617)
+					{
+						score = score + 1;
+					}
+				if (purpleBeanY > 599 && purpleBeanY < 615)
+					{
+					score = score + 1;
+					}
+				/*
+				if (heartY > 599 && heartY < 613)
+					{
+						if (lives < 3)
+							{
+								lives = lives + 1;
+							}
+					}
+				*/
+        }
+        
+        if (score >= 251 && score <= 300)
+        	{
+        blackBeanY = blackBeanY + 2
+        brownBeanY = brownBeanY + 2
+        greenBeanY = greenBeanY + 2
+        orangeBeanY = orangeBeanY + 2
+        pinkBeanY = pinkBeanY + 2
+        purpleBeanY = purpleBeanY + 2
+        heartY = heartY + 2
+        /*
+        gold5Y = gold5Y + 2
+        */
+        
+                if (blackBeanY > 599 && blackBeanY < 619)
+					{
+						score = score + 1;
+					}
+				if (brownBeanY > 599 && brownBeanY < 617)
+					{
+						score = score + 1;
+					}
+				if (greenBeanY > 599 && greenBeanY < 615)
+					{
+						score = score + 1;
+					}
+				if (orangeBeanY > 599 && orangeBeanY < 615)
+					{
+						score = score + 1;
+					}
+				if (pinkBeanY > 599 && pinkBeanY < 619)
+					{
+						score = score + 1;
+					}
+				if (purpleBeanY > 599 && purpleBeanY < 617)
+					{
+						score = score + 1;
+					}
+				/*
+				if (heartY > 599 && heartY < 615)
+					{
+						if (lives < 3)
+							{
+								lives = lives + 1;
+							}
+					}
+				*/
+        }
+        
+        if (score >= 301)
+        	{
+        blackBeanY = blackBeanY + 4
+        brownBeanY = brownBeanY + 4
+        greenBeanY = greenBeanY + 4
+        orangeBeanY = orangeBeanY + 4
+        pinkBeanY = pinkBeanY + 4
+        purpleBeanY = purpleBeanY + 4
+        heartY = heartY + 4
+        /*
+        gold5Y = gold5Y + 4
+        */
+        
+                if (blackBeanY > 599 && blackBeanY < 623)
+					{
+						score = score + 1;
+					}
+				if (brownBeanY > 599 && brownBeanY < 621)
+					{
+						score = score + 1;
+					}
+				if (greenBeanY > 599 && greenBeanY < 619)
+					{
+						score = score + 1;
+					}
+				if (orangeBeanY > 599 && orangeBeanY < 619)
+					{
+						score = score + 1;
+					}
+				if (pinkBeanY > 599 && pinkBeanY < 623)
+					{
+						score = score + 1;
+					}
+				if (purpleBeanY > 599 && purpleBeanY < 621)
+					{
+					score = score + 1;
+					}
+				/*
+				if (heartY > 599 && heartY < 619)
+					{
+						if (lives < 3)
+							{
+								lives = lives + 1;
+							}
+					}
+				*/
+        }
+        
+        // minion head eclipse distance with bean
+        
+        dHeartHead = (int)sqrt(sq(heartX+25-minionX-40)+sq(heartY+25-minionY-75));
+        dBlackHead = (int)sqrt(sq(blackBeanX+25-minionX-40)+sq(blackBeanY+25-minionY-75));
+        dBrownHead = (int)sqrt(sq(brownBeanX+25-minionX-40)+sq(brownBeanY+25-minionY-75));
+        dGreenHead = (int)sqrt(sq(greenBeanX+25-minionX-40)+sq(greenBeanY+25-minionY-75));
+        dOrangeHead = (int)sqrt(sq(orangeBeanX+25-minionX-40)+sq(orangeBeanY+25-minionY-75));
+        dPinkHead = (int)sqrt(sq(pinkBeanX+25-minionX-40)+sq(pinkBeanY+25-minionY-75));
+        dPurpleHead = (int)sqrt(sq(purpleBeanX+25-minionX-40)+sq(purpleBeanY+25-minionY-75));
+        /*
+        dGoldHead5 = (int)sqrt(sq(gold5X+25-minionX-40)+sq(gold5Y+25-minionY-75));
+        */
+        
+        // collision of beans and minion
+        
+        /*
+        if (dGoldHead5 < 70 && dGoldHead5 > 0 && goldsHeart5 == 1 && goldPop5 == 0)
+        	{
+        		score = score + 5;
+        		goldsHeart = 0;
+        		soundManager.play('s0');
+        		goldPop5 = 1;
+        	}
+        
+        if (dGoldHead5 > 70)
+        	{
+        		goldsHeart = 1;
+        		goldPop5 = 0;
+        	}
+        */
+        
+        if (dHeartHead < 70 && dHeartHead > 0 && heartsHeart == 1 && heartPop == 0)
+        	{
+        		if (lives < 3)
+        			{
+        				lives = lives + 1;
+        			}
+        		heartsHeart = 0;
+        		soundManager.play('s0');
+        		heartPop = 1;
+        }
+        
+    	if (dHeartHead > 70)
+    		{
+    			heartsHeart = 1;
+    			heartPop = 0;
+    		}
+    	        
+        if (dBlackHead < 70 && dBlackHead > 0 && heartsBlack == 1 && blackPop == 0)
+        	{  
+        		if (keyPressed == true)
+        			{
+        			if (keyCode == LEFT)
+						{
+							image(minionLeftHit,minionX,minionY,80,150);
+						}
+					if (keyCode == RIGHT)
+						{
+							image(minionRightHit,minionX,minionY,80,150);
+						}
+        			}
+        		else
+					{
+						image(minionIdleHit,minionX,minionY,80,150);
+					}
+				lives = lives - 1;
+				score = score - 1;
+			    heartsBlack = 0;
+			    soundManager.play('s0');
+			    blackPop = 1;
+			    
+        }
+        
+        if (dBlackHead > 70)
+        	{ 
+        heartsBlack = 1;
+        blackPop = 0;
+        }
+        
+        if (dBrownHead < 70 && dBrownHead > 0 && heartsBrown == 1 && brownPop == 0)
+        	{  
+        		if (keyPressed == true)
+        			{
+        			if (keyCode == LEFT)
+						{
+							image(minionLeftHit,minionX,minionY,80,150);
+						}
+					if (keyCode == RIGHT)
+						{
+							image(minionRightHit,minionX,minionY,80,150);
+						}
+        			}
+        		else
+					{
+						image(minionIdleHit,minionX,minionY,80,150);
+					}
+				lives = lives - 1;
+				score = score - 1;
+			    heartsBrown = 0;
+			    soundManager.play('s0');
+			    brownPop = 1;
+
+        }
+        
+        if (dBrownHead > 70)
+        	{ 
+        heartsBrown = 1;
+        brownPop = 0;
+        }
+        
+        if (dGreenHead < 70 && dGreenHead > 0 && heartsGreen == 1 && greenPop == 0)
+        	{  
+        	if (keyPressed == true)
+        			{
+        			if (keyCode == LEFT)
+						{
+							image(minionLeftHit,minionX,minionY,80,150);
+						}
+					if (keyCode == RIGHT)
+						{
+							image(minionRightHit,minionX,minionY,80,150);
+						}
+        			}
+        		else
+					{
+						image(minionIdleHit,minionX,minionY,80,150);
+					}
+				lives = lives - 1;
+				score = score - 1;
+			    heartsGreen = 0;
+			    soundManager.play('s0');
+			    greenPop = 1;
+
+        }
+        
+        if (dGreenHead > 70)
+        	{ 
+        heartsGreen = 1;
+        greenPop = 0;
+        }
+        
+        if (dOrangeHead < 70 && dOrangeHead > 0 && heartsOrange == 1 && orangePop == 0)
+        	{  
+        	if (keyPressed == true)
+        			{
+        			if (keyCode == LEFT)
+						{
+							image(minionLeftHit,minionX,minionY,80,150);
+						}
+					if (keyCode == RIGHT)
+						{
+							image(minionRightHit,minionX,minionY,80,150);
+						}
+        			}
+        		else
+					{
+						image(minionIdleHit,minionX,minionY,80,150);
+					}
+				lives = lives - 1;
+				score = score - 1;
+			    heartsOrange = 0;
+			    soundManager.play('s0');
+			    orangePop = 1;
+
+        }
+        
+        if (dOrangeHead > 70)
+        	{ 
+        heartsOrange = 1;
+        orangePop = 0;
+        }
+        
+        if (dPinkHead < 70 && dPinkHead > 0 && heartsPink == 1 && pinkPop == 0)
+        	{  
+        	if (keyPressed == true)
+        			{
+        			if (keyCode == LEFT)
+						{
+							image(minionLeftHit,minionX,minionY,80,150);
+						}
+					if (keyCode == RIGHT)
+						{
+							image(minionRightHit,minionX,minionY,80,150);
+						}
+        			}
+        		else
+					{
+						image(minionIdleHit,minionX,minionY,80,150);
+					}
+				lives = lives - 1;
+				score = score - 1;
+			    heartsPink = 0;
+			    soundManager.play('s0');
+			    pinkPop = 1;
+
+        }
+        
+        if (dPinkHead > 70)
+        	{ 
+        heartsPink = 1;
+        pinkPop = 0;
+        }
+        
+        if (dPurpleHead < 70 && dPurpleHead > 0 && heartsPurple == 1 && purplePop == 0)
+        	{  
+        	if (keyPressed == true)
+        			{
+        			if (keyCode == LEFT)
+						{
+							image(minionLeftHit,minionX,minionY,80,150);
+						}
+					if (keyCode == RIGHT)
+						{
+							image(minionRightHit,minionX,minionY,80,150);
+						}
+        			}
+        		else
+					{
+						image(minionIdleHit,minionX,minionY,80,150);
+					}
+				lives = lives - 1;
+				score = score - 1;
+			    heartsPurple = 0;
+			    soundManager.play('s0');
+			    purplePop = 1;
+
+        }
+        
+        if (dPurpleHead > 70)
+        	{ 
+        heartsPurple = 1;
+        purplePop = 0;
+        }
+        
+        //beans recurring 
+        
+        /*
+        if (gold5Y > 600)
+        	{
+        		gold5X = random (10,500);
+        		gold5Y = random (-1000,-5000);
+        		gold5Y = heartY + 8;
+        	}
+        */
+        
+        if (heartY > 600)
+        	{
+        		heartX = random (10,500);
+        		heartY = random (-1000,-5000);
+        		heartY = heartY + 8;
+        	}
+        
+        if (blackBeanY > 600)
+        	{
+        blackBeanX = random(10,250);
+        blackBeanY = random(-50,-200);
+        blackBeanY = blackBeanY + 8
+        }
+        if (brownBeanY > 600)
+        	{
+        brownBeanX = random(250,500);
+        brownBeanY = random(-50,-200);
+        brownBeanY = brownBeanY + 8
+        }
+        
+        if (greenBeanY > 600)
+        	{
+        greenBeanX = random(10,250);
+        greenBeanY = random(-50,-200);
+        greenBeanY = greenBeanY + 8
+        }
+        
+        if (orangeBeanY > 600)
+        	{
+        orangeBeanX = random(250,500);
+        orangeBeanY = random(-50,-200);
+        orangeBeanY = orangeBeanY + 8
+        }
+        
+        if (pinkBeanY > 600)
+        	{
+        pinkBeanX = random(10,250);
+        pinkBeanY = random(-50,-200);
+        pinkBeanY = pinkBeanY + 8
+        }
+        
+        if (purpleBeanY > 600)
+        	{
+        purpleBeanX = random(250,500);
+        purpleBeanY = random(-50,-200);
+        purpleBeanY = purpleBeanY + 8
+        }
+                
+	    // show 2 or 1 lives (heart)
+	    
+	    if (lives == 2)
+	    	{ 
+        image(redheart,615,100,48,48);
+	    image(redheart,665,100,48,48);
+	    }
+	    
+	    if (lives == 1)
+	    	{ 
+        image(redheart,615,100,48,48);
+	    }
+	    
+        fill(255,255,255);
+        textSize(50);
+        text(score,630,450);
+    
+        // when game ends
+        
+        if (end == 1)
+        	{
+        scoreStop = 1;
+        image(gameover,150,280,300,70); 
+        
+        blackBeanX = 1000;
+		brownBeanX = 1000;
+		greenBeanX = 1000;
+		orangeBeanX = 1000;
+		pinkBeanX = 1000;
+		purpleBeanX = 1000;
+		heartX = 1000;
+		/*
+		gold5X = 1000;
+		*/
+		
+		// random y positions of beans
+		
+		blackBeanY = 1000;
+		brownBeanY = 1000;
+		greenBeanY = 1000;
+		orangeBeanY = 1000;
+		pinkBeanY = 1000;
+		purpleBeanY = 1000;
+		heartY = 1000;
+		/*
+		gold5Y = 1000;
+		*/
+        }
+	    
+	    if (lives <= 0)
+	    	{
+	    end = 1;
+	    }
+
+        if (mousePressed == true && mouseButton == LEFT)
+        	{
+   	    if (mouseX > 620 && mouseX < 800 && mouseY > 520 && mouseY < 600)
+   	    {
+   	    
+   	    minionX = 250;
+		minionY = 450; 
+		
+		// random x positions of beans 
+		
+		blackBeanX = random(10,250);
+		brownBeanX = random(250,500);
+		greenBeanX = random(10,500);
+		orangeBeanX = random(250,500);
+		pinkBeanX = random(10,250);
+		purpleBeanX = random(250,500);
+		heartX = random (1,500);
+		
+		// random y positions of beans
+		
+		blackBeanY = random(-400,-800);
+		brownBeanY = random(-50,-400);
+		greenBeanY = random(-50,-800);
+		orangeBeanY = random(-50,-400);
+		pinkBeanY = random(-50,-800);
+		purpleBeanY = random(-50,-400);
+		heartY = random (-50,-400);
+		
+   		// distance between beans and minion
+		dBlackHead = 0;
+		dBrownHead = 0;
+		dGreenHead = 0;
+		dOrangeHead = 0;
+		dPinkHead = 0;
+		dPurpleHead = 0;
+		dHeartHead = 0;
+	    
+	    // minion lives
+	    lives = 3;
+	    hearts = 1;
+	    
+	    //pop sounds
+	    blackPop = 0;
+	    brownPop = 0;
+	    greenPop = 0;
+	    orangePop = 0;
+	    pinkPop = 0;
+	    purplePop = 0;
+	    heartPop = 0;
+	    
+	    
+	    //end point and score
+	    scoreStop = 0;
+	    score = 0;
+	    end = 0;
+   	    }
+        }
+    
+        
+
+	    
+	}
+	
+
+
+</script>
+<canvas id="mycanvas"></canvas>
+</center>
+</head>
+</html>
+

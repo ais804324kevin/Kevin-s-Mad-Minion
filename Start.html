@@ -1,0 +1,41 @@
+<html>
+<head>
+<center>
+<title> Mad Minions</title>
+<script src="processing-1.4.1.js"></script>
+<script type="text/processing" data-processing-target="mycanvas">
+
+PImage HomeBanner; 
+
+void setup()
+	{
+		size(800, 600);
+		frameRate( 30 );
+		HomeBanner = loadImage("HomeBanner.jpg");
+	}
+
+
+void draw()
+	{
+	    image(HomeBanner,0,0,800,600);
+	    
+	    if (mousePressed == true && mouseButton == LEFT)
+             {
+			     if (mouseX > 300 && mouseX < 500 && mouseY > 400 && mouseY < 550)
+			 
+                {
+	            
+	            link("Rules.html");
+	        
+                }
+             }
+	}
+	
+
+
+</script>
+<canvas id="mycanvas"></canvas>
+</center>
+</head>
+</html>
+
